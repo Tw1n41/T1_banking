@@ -1,0 +1,24 @@
+databaseChangeLog:
+  - changeSet:
+      id: 003
+      author: postgres
+      changes:
+        - insert:
+            tableName: product_registry
+            columns:
+              - column: { name: client_id, valueNumeric: 1 }
+              - column: { name: account_id, valueNumeric: 1 }
+              - column: { name: product_id, valueNumeric: 1 }
+              - column: { name: interest_rate, valueNumeric: 7.5 }
+              - column: { name: open_date, valueDate: "2025-09-20T10:00:00" }
+
+        - insert:
+            tableName: payment_registry
+            columns:
+              - column: { name: product_registry_id, valueNumeric: 1 }
+              - column: { name: payment_date, valueDate: "2025-09-30T15:00:00" }
+              - column: { name: amount, valueNumeric: 10000.00 }
+              - column: { name: interest_rate_amount, valueNumeric: 750.00 }
+              - column: { name: debt_amount, valueNumeric: 9250.00 }
+              - column: { name: expired, valueBoolean: false }
+              - column: { name: payment_expiration_date, valueDate: "2025-10-10T00:00:00" }

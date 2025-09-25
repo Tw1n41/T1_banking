@@ -1,0 +1,44 @@
+databaseChangeLog:
+  - changeSet:
+      id: 001
+      author: postgres
+      changes:
+        - createTable:
+            tableName: accounts
+            columns:
+              - column:
+                  name: id
+                  type: BIGSERIAL
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: client_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: product_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: balance
+                  type: NUMERIC(15,2)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: interest_rate
+                  type: NUMERIC(5,2)
+              - column:
+                  name: is_recalc
+                  type: BOOLEAN
+                  defaultValueBoolean: true
+              - column:
+                  name: card_exist
+                  type: BOOLEAN
+                  defaultValueBoolean: true
+              - column:
+                  name: status
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false

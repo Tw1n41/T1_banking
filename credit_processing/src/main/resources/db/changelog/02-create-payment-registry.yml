@@ -1,0 +1,40 @@
+databaseChangeLog:
+  - changeSet:
+      id: 002
+      author: postgres
+      changes:
+        - createTable:
+            tableName: payment_registry
+            columns:
+              - column:
+                  name: id
+                  type: BIGSERIAL
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: product_registry_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: payment_date
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: amount
+                  type: NUMERIC(15,2)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: interest_rate_amount
+                  type: NUMERIC(15,2)
+              - column:
+                  name: debt_amount
+                  type: NUMERIC(15,2)
+              - column:
+                  name: expired
+                  type: BOOLEAN
+              - column:
+                  name: payment_expiration_date
+                  type: TIMESTAMP

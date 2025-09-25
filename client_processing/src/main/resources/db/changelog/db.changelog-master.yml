@@ -1,0 +1,11 @@
+databaseChangeLog:
+  - include:
+      file: db/changelog/01-create-user.yml
+  - include:
+      file: db/changelog/02-create-client.yml
+  - include:
+      file: db/changelog/03-create-product.yml
+  - include:
+      file: db/changelog/04-create-client-product.yml
+  - include:
+      file: db/changelog/05-insert-test-data.yml

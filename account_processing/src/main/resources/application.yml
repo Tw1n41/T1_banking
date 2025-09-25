@@ -1,0 +1,19 @@
+server:
+  port: 9090
+  flyway:
+    enabled: false
+
+spring:
+  application:
+    name: t1-banking
+  datasource:
+    url: jdbc:postgresql://localhost:5432/account_processing
+    username: postgres
+    password: Qwe123
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-master.yml
+    enabled: true

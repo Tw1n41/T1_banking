@@ -1,0 +1,43 @@
+databaseChangeLog:
+  - changeSet:
+      id: 003
+      author: postgres
+      changes:
+        - insert:
+            tableName: accounts
+            columns:
+              - column: { name: client_id, valueNumeric: 1 }
+              - column: { name: product_id, valueNumeric: 1 }
+              - column: { name: balance, valueNumeric: 15000.00 }
+              - column: { name: interest_rate, valueNumeric: 0.0 }
+              - column: { name: is_recalc, valueBoolean: false }
+              - column: { name: card_exist, valueBoolean: true }
+              - column: { name: status, value: "ACTIVE" }
+
+        - insert:
+            tableName: cards
+            columns:
+              - column: { name: account_id, valueNumeric: 1 }
+              - column: { name: card_id, value: "4000000000000001" }
+              - column: { name: payment_system, value: "VISA" }
+              - column: { name: status, value: "ACTIVE" }
+
+        - insert:
+            tableName: payments
+            columns:
+              - column: { name: account_id, valueNumeric: 1 }
+              - column: { name: payment_date, valueDate: "2025-09-26T10:00:00" }
+              - column: { name: amount, valueNumeric: 2000.00 }
+              - column: { name: is_credit, valueBoolean: false }
+              - column: { name: payed_at, valueDate: "2025-09-26T11:00:00" }
+              - column: { name: type, value: "REGULAR" }
+
+        - insert:
+            tableName: transactions
+            columns:
+              - column: { name: account_id, valueNumeric: 1 }
+              - column: { name: card_id, valueNumeric: 1 }
+              - column: { name: type, value: "PAYMENT" }
+              - column: { name: amount, valueNumeric: 2000.00 }
+              - column: { name: status, value: "COMPLETE" }
+              - column: { name: timestamp, valueDate: "2025-09-26T11:05:00" }

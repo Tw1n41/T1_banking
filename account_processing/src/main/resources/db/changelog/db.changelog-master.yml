@@ -1,0 +1,11 @@
+databaseChangeLog:
+  - include:
+      file: db/changelog/01-create-account.yml
+  - include:
+      file: db/changelog/02-create-card.yml
+  - include:
+      file: db/changelog/03-create-payment.yml
+  - include:
+      file: db/changelog/04-create-transaction.yml
+  - include:
+      file: db/changelog/05-insert-test-data.yml

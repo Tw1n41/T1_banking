@@ -1,0 +1,32 @@
+databaseChangeLog:
+  - changeSet:
+      id: 003
+      author: postgres
+      changes:
+        - createTable:
+            tableName: products
+            columns:
+              - column:
+                  name: id
+                  type: BIGSERIAL
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: VARCHAR(150)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: key
+                  type: VARCHAR(10)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: create_date
+                  type: TIMESTAMP
+                  defaultValueComputed: CURRENT_TIMESTAMP
+              - column:
+                  name: product_id
+                  type: VARCHAR(50)
+                  computed: "key || id"

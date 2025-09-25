@@ -1,0 +1,40 @@
+databaseChangeLog:
+  - changeSet:
+      id: 003
+      author: postgres
+      changes:
+        - insert:
+            tableName: users
+            columns:
+              - column: { name: login, value: "admin" }
+              - column: { name: password, value: "password" }
+              - column: { name: email, value: "admin@test.com" }
+
+        - insert:
+            tableName: clients
+            columns:
+              - column: { name: client_id, value: "770100000001" }
+              - column: { name: user_id, valueNumeric: 1 }
+              - column: { name: first_name, value: "Ivan" }
+              - column: { name: middle_name, value: "Ivanovich" }
+              - column: { name: last_name, value: "Petrov" }
+              - column: { name: date_of_birth, valueDate: "1990-05-20" }
+              - column: { name: document_type, value: "PASSPORT" }
+              - column: { name: document_id, value: "123456" }
+              - column: { name: document_prefix, value: "77" }
+              - column: { name: document_suffix, value: "654321" }
+
+        - insert:
+            tableName: products
+            columns:
+              - column: { name: name, value: "Debit Card" }
+              - column: { name: key, value: "DC" }
+              - column: { name: create_date, valueDate: "2025-09-25T12:00:00" }
+
+        - insert:
+            tableName: client_products
+            columns:
+              - column: { name: client_id, valueNumeric: 1 }
+              - column: { name: product_id, valueNumeric: 1 }
+              - column: { name: open_date, valueDate: "2025-09-25T12:00:00" }
+              - column: { name: status, value: "ACTIVE" }

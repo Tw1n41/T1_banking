@@ -1,0 +1,51 @@
+databaseChangeLog:
+  - changeSet:
+      id: 002
+      author: postgres
+      changes:
+        - createTable:
+            tableName: clients
+            columns:
+              - column:
+                  name: id
+                  type: BIGSERIAL
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: client_id
+                  type: VARCHAR(12)
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: user_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_client_user
+                    references: users(id)
+              - column:
+                  name: first_name
+                  type: VARCHAR(150)
+              - column:
+                  name: middle_name
+                  type: VARCHAR(150)
+              - column:
+                  name: last_name
+                  type: VARCHAR(150)
+              - column:
+                  name: date_of_birth
+                  type: DATE
+              - column:
+                  name: document_type
+                  type: VARCHAR(50)
+              - column:
+                  name: document_id
+                  type: VARCHAR(50)
+              - column:
+                  name: document_prefix
+                  type: VARCHAR(10)
+              - column:
+                  name: document_suffix
+                  type: VARCHAR(10)

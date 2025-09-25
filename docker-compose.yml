@@ -1,0 +1,91 @@
+version: '3.9'
+
+services:
+  # Сервис account_processing
+  account_processing:
+    build:
+      context: .
+      dockerfile: account_processing/Dockerfile
+    container_name: account_processing
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/account_processing
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: Qwe123
+    depends_on:
+      - localhost
+
+  # Сервис client_processing
+  client_processing:
+    build:
+      context: .
+      dockerfile: client_processing/Dockerfile
+    container_name: client_processing
+    ports:
+      - "8081:8081"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/t1_banking
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: Qwe123
+    depends_on:
+      - localhost
+
+  # Сервис credit_processing
+  credit_processing:
+    build:
+      context: .
+      dockerfile: credit_processing/Dockerfile
+    container_name: credit_processing
+    ports:
+      - "8082:8082"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/credit_processing
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: Qwe123
+    depends_on:
+      - localhost
+
+  # База данных для account_processing
+  db_account:
+    image: postgres:15
+    container_name: db_account
+    environment:
+      POSTGRES_DB: account_processing
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: Qwe123
+    ports:
+      - "5433:5432"
+    volumes:
+      - db_account_data:/var/lib/postgresql/data
+
+  # База данных для client_processing
+  db_client:
+    image: postgres:15
+    container_name: db_client
+    environment:
+      POSTGRES_DB: t1_banking
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: Qwe123
+    ports:
+      - "5434:5432"
+    volumes:
+      - db_client_data:/var/lib/postgresql/data
+
+  # База данных для credit_processing
+  db_credit:
+    image: postgres:15
+    container_name: db_credit
+    environment:
+      POSTGRES_DB: credit_processing
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: Qwe123
+    ports:
+      - "5435:5432"
+    volumes:
+      - db_credit_data:/var/lib/postgresql/data
+
+volumes:
+  db_account_data:
+  db_client_data:
+  db_credit_data:
