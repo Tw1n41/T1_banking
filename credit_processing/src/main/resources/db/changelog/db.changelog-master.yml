@@ -5,3 +5,5 @@ databaseChangeLog:
       file: db/changelog/02-create-payment-registry.yml
   - include:
       file: db/changelog/03-insert-test-data.yml
+  - include:
+      file: db/changelog/04-add-month-count-to-product-registry.yml

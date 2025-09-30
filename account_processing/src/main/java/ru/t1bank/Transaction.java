@@ -36,6 +36,9 @@ public class Transaction {
     @Enumerated(EnumType.STRING)
     private TransactionStatus transactionStatus;
 
+    @Column(name = "transaction_date")
+    private LocalDateTime transactionDate;
+
     @Column(name = "timestamp")
     private LocalDateTime timestamp;
 }

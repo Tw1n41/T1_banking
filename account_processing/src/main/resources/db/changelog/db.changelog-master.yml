@@ -9,3 +9,5 @@ databaseChangeLog:
       file: db/changelog/04-create-transaction.yml
   - include:
       file: db/changelog/05-insert-test-data.yml
+  - include:
+      file: db/changelog/06-create-account-product.yml

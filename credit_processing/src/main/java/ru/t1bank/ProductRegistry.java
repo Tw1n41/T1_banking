@@ -33,4 +33,18 @@ public class ProductRegistry {
 
     @Column(name = "open_date")
     private LocalDateTime openDate;
+
+    @Column(name = "month_count")
+    private Integer monthCount;
+
+    @Column(name = "amount")
+    private Double amount;
+
+    @Column(name = "overdue")
+    private Boolean overdue;
+
+    @Column(name = "monthly_payment")
+    private BigDecimal monthlyPayment;
+
+    public Boolean isOverdue() { return this.overdue; }
 }

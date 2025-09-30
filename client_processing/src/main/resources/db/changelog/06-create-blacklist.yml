@@ -1,0 +1,45 @@
+databaseChangeLog:
+  - changeSet:
+      id: 006
+      author: postgres
+      changes:
+        - createTable:
+            tableName: blacklist
+            columns:
+              - column:
+                  name: id
+                  type: BIGSERIAL
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: document_type
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: document_id
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: blacklisted_at
+                  type: INT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: reason
+                  type: VARCHAR(150)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: blacklist_expiration_date
+                  type: DATE
+                  constraints:
+                    nullable: false
+        - addForeignKeyConstraint:
+            baseTableName: blacklist
+            baseColumnNames: document_id
+            referencedTableName: clients
+            referencedColumnNames: document_id
+            constraintName: fk_blacklist_client

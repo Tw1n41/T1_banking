@@ -1,0 +1,29 @@
+databaseChangeLog:
+  - changeSet:
+      id: 004
+      author: postgres
+      changes:
+        - addColumn:
+            tableName: product_registry
+            columns:
+              - column:
+                  name: month_count
+                  type: INT
+                  defaultValueNumeric: 0
+                  remarks: "Month count"
+        - addColumn:
+            tableName: product_registry
+            columns:
+              - column:
+                  name: monthly_payment
+                  type: NUMERIC(15,2)
+                  defaultValueNumeric: 0
+                  remarks: "Ежемесячный платеж по кредиту"
+        - addColumn:
+            tableName: product_registry
+            columns:
+              - column:
+                  name: overdue
+                  type: BOOLEAN
+                  defaultValueBoolean: false
+                  remarks: "Флаг просроченного кредита"

@@ -17,3 +17,13 @@ spring:
   liquibase:
     change-log: classpath:db/changelog/db.changelog-master.yml
     enabled: true
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: account-processing
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: "*"
+    topic:
+      client_transactions: client-transactions

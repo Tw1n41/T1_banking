@@ -1,5 +1,5 @@
 server:
-  port: 9092
+  port: 9095
   flyway:
     enabled: false
 
@@ -16,3 +16,15 @@ spring:
     show-sql: true
   liquibase:
     change-log: classpath:db/changelog/db.changelog-master.yml
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: credit-processing
+    producer:
+      enable: true
+
+  credit:
+    limit: 100000.0
+  client:
+    processing:
+      url: http://localhost:9099
