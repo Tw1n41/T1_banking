@@ -27,4 +27,13 @@ public class TransactionDto {
 
     @JsonProperty("type")
     private String type;
+
+    @JsonProperty("card_id")
+    private Long cardId;
+
+    @JsonProperty("month_count")
+    private Integer monthCount;
+
+    @JsonProperty("interest_rate")
+    private BigDecimal interestRate;
 }

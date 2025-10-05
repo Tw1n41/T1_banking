@@ -1,0 +1,28 @@
+databaseChangeLog:
+  - changeSet:
+      id: 008
+      author: postgres
+      changes:
+        - addColumn:
+            tableName: payments
+            columns:
+              - column:
+                  name: interest_rate
+                  type: NUMERIC(8,2)
+                  constraints:
+                    nullable: true
+              - column:
+                  name: month_count
+                  type: INT
+                  constraints:
+                    nullable: true
+              - column:
+                  name: expired
+                  type: BOOLEAN
+                  defaultValueBoolean: false
+                  constraints:
+                    nullable: false
+              - column:
+                  name: message_key
+                  type: VARCHAR(150)
+                  remarks: "Ключ для kafka"

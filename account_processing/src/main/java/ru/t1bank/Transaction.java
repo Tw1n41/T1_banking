@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Table(name = "transaction")
+@Table(name = "transactions")
 public class Transaction {
 
     @Id
@@ -41,4 +41,16 @@ public class Transaction {
 
     @Column(name = "timestamp")
     private LocalDateTime timestamp;
+
+    @Column(name = "message_key")
+    private String messageKey;
+
+    @Column(name = "transaction_id")
+    private Long transactionId;
+
+    @Column(name = "type")
+    private String type;
+
+    @Column(name = "frozen")
+    private boolean frozen;
 }
