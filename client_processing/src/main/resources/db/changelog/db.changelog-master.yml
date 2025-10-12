@@ -11,3 +11,5 @@ databaseChangeLog:
       file: db/changelog/06-create-blacklist.yml
   - include:
       file: db/changelog/05-insert-test-data.yml
+  - include:
+      file: db/changelog/07-create-error-log-table.yml

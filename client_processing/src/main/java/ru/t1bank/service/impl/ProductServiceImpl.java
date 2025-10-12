@@ -5,6 +5,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import ru.t1bank.Product;
+import ru.t1bank.aop.annotation.Cached;
+import ru.t1bank.aop.annotation.Metric;
 import ru.t1bank.dto.ProductDto;
 import ru.t1bank.kafka.KafkaClientProducer;
 import ru.t1bank.kafka.KafkaProductProducer;
@@ -30,6 +32,7 @@ public class ProductServiceImpl implements ProductService {
     private String productTopic;
 
     @Override
+    @Metric
     public ProductDto createProduct(ProductDto productDto) {
 //        Product saved = Product.builder()
 //                .name(productDto.getName())
@@ -57,18 +60,21 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @Cached
     public Optional<ProductDto> getProdById(Long id) {
         return productRepository.findById(id)
                 .map(productMapper::toDto);
     }
 
     @Override
+    @Cached
     public Optional<ProductDto> getProducts(Long id) {
         return productRepository.findById(id)
                 .map(productMapper::toDto);
     }
 
     @Override
+    @Metric
     public ProductDto updProduct(Long id, ProductDto productDto) {
 
         Product product = productRepository.findById(id)
@@ -85,6 +91,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @Metric
     public void deleteProduct(Long id) {
 
         Product product = productRepository.findById(id)

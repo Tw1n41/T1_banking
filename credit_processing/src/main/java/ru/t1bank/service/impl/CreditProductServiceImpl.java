@@ -6,6 +6,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import ru.t1bank.ProductRegistry;
+import ru.t1bank.aop.annotation.HttpIncomeRequestLog;
+import ru.t1bank.aop.annotation.HttpOutcomeRequestLog;
+import ru.t1bank.aop.annotation.Metric;
 import ru.t1bank.dto.ClientDto;
 import ru.t1bank.dto.CreditProductRequestDto;
 import ru.t1bank.repository.ProductRegistryRepository;
@@ -30,6 +33,8 @@ public class CreditProductServiceImpl implements CreditProductService {
     private Double creditLimit;
 
     @Override
+    @HttpOutcomeRequestLog
+    @Metric
     public void processCreditProduct(CreditProductRequestDto dto) {
         log.info("Обработка кредитного продукта {}", dto);
 

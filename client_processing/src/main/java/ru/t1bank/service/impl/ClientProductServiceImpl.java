@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 import ru.t1bank.Client;
 import ru.t1bank.ClientProduct;
 import ru.t1bank.Product;
+import ru.t1bank.aop.annotation.Cached;
+import ru.t1bank.aop.annotation.Metric;
 import ru.t1bank.dto.ClientProductDto;
 import ru.t1bank.kafka.KafkaClientProductProducer;
 import ru.t1bank.repository.ClientProductRepository;
@@ -40,6 +42,7 @@ public class ClientProductServiceImpl implements ClientProductService {
     private String clientCreditProductsTopic;
 
     @Override
+    @Metric
     public ClientProductDto create(ClientProductDto clientPrDto) {
 
         Client client = clientRepository.findById(clientPrDto.getClientId())
@@ -66,12 +69,14 @@ public class ClientProductServiceImpl implements ClientProductService {
     }
 
     @Override
+    @Cached
     public Optional<ClientProductDto> getById(Long id) {
         return clientProductRepository.findById(id)
                 .map(clientProductMapper::toDto);
     }
 
     @Override
+    @Cached
     public List<ClientProductDto> getAllServices() {
         return clientProductRepository.findAll().stream()
                 .map(clientProductMapper::toDto)
@@ -79,6 +84,7 @@ public class ClientProductServiceImpl implements ClientProductService {
     }
 
     @Override
+    @Metric
     public ClientProductDto updService(Long id, ClientProductDto clientPrDto) {
 
         ClientProduct clientProduct = clientProductRepository.findById(id)
@@ -105,6 +111,7 @@ public class ClientProductServiceImpl implements ClientProductService {
     }
 
     @Override
+    @Metric
     public void delService(Long id) {
         clientProductRepository.findById(id).ifPresentOrElse(clientProduct -> {
             clientProductRepository.delete(clientProduct);

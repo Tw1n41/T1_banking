@@ -6,8 +6,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.t1bank.Client;
-import ru.t1bank.aop.annotation.LogMethod;
-import ru.t1bank.aop.annotation.LoggableException;
 import ru.t1bank.dto.ClientDto;
 import ru.t1bank.dto.RegistryResponce;
 import ru.t1bank.enums.Metrics;

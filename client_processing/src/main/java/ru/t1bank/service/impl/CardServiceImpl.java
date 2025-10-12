@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.t1bank.Card;
+import ru.t1bank.aop.annotation.Metric;
 import ru.t1bank.dto.CardDto;
 import ru.t1bank.kafka.KafkaCardProducer;
 import ru.t1bank.repository.CardRepository;
@@ -23,6 +24,7 @@ public class CardServiceImpl implements CardService {
     private final KafkaCardProducer kafkaCardProducer;
 
     @Override
+    @Metric
     public void create(CardDto cardDto) {
 
         if (cardDto.getClientId() == null) {

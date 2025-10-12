@@ -8,9 +8,13 @@ import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.aspectj.AnnotationTransactionAspect;
 import org.springframework.transaction.interceptor.BeanFactoryTransactionAttributeSourceAdvisor;
+import org.springframework.web.client.RestTemplate;
 import ru.t1bank.Account;
 import ru.t1bank.Payment;
 import ru.t1bank.Transaction;
+import ru.t1bank.aop.annotation.Cached;
+import ru.t1bank.aop.annotation.HttpOutcomeRequestLog;
+import ru.t1bank.aop.annotation.Metric;
 import ru.t1bank.dto.TransactionDto;
 import ru.t1bank.repository.AccountRepository;
 import ru.t1bank.repository.PaymentRepository;
@@ -23,6 +27,7 @@ import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -32,12 +37,16 @@ public class TransactionProcessingServiceImpl implements TransactionProcessingSe
     private final AccountRepository accountRepository;
     private final TransactionRepository transactionRepository;
     private final PaymentRepository paymentRepository;
+    private final RestTemplate restTemplate;
 
     private final BeanFactoryTransactionAttributeSourceAdvisor transactionAdvisor;
 
     private final AnnotationTransactionAspect transactionAspect;
 
     private final TransactionService transactionService;
+
+    @Value("${client.service.url:http://client-processing/api/v1/client}")
+    private String clientServiceUrl;
 
     @Value("${fraud.transaction.limit.count:10}")
     private int limitN;
@@ -47,9 +56,16 @@ public class TransactionProcessingServiceImpl implements TransactionProcessingSe
 
     @Override
     @Transactional
+    @Metric
     public void process(String messageKey, TransactionDto dto) {
 
         log.info("Process with key {} dto {} started", messageKey, dto);
+
+        boolean isClientBlocked = checkIfClientBlocked(dto.getAccountId());
+        if (isClientBlocked) {
+            log.warn("Client {} is blocked — transaction denied", dto.getAccountId());
+            return;
+        }
 
         Transaction transaction = Transaction.builder()
                 .messageKey(messageKey)
@@ -100,6 +116,22 @@ public class TransactionProcessingServiceImpl implements TransactionProcessingSe
         else log.warn("Unknown transaction type {}", dto.getType());
     }
 
+    @HttpOutcomeRequestLog
+    @Cached
+    public boolean checkIfClientBlocked(Long clientId) {
+        String url = String.format("%s/%s/is-blocked", clientServiceUrl, clientId);
+        log.info("Checking client status by URL {}", url);
+
+        try {
+            Boolean response = restTemplate.getForObject(url, Boolean.class);
+            return Boolean.TRUE.equals(response);
+        } catch (Exception e) {
+            log.error("Error checking client status: {}", e.getMessage());
+            throw new RuntimeException("Client service unavailable", e);
+        }
+    }
+
+    @Metric
     private void applyDebit(Account account, BigDecimal amount, Transaction transaction) {
 
         if (account.getBalance().compareTo(amount) >= 0) {
@@ -119,6 +151,7 @@ public class TransactionProcessingServiceImpl implements TransactionProcessingSe
         }
     }
 
+    @Metric
     private void applyCredit(Account account, TransactionDto dto, Transaction transaction) {
 
         BigDecimal amount = dto.getAmount();
@@ -160,6 +193,7 @@ public class TransactionProcessingServiceImpl implements TransactionProcessingSe
         }
     }
 
+    @Metric
     private void createPaymentShedule(Long accountId, BigDecimal amount, BigDecimal rate, int months) {
 
         BigDecimal monthlyRate = rate.divide(BigDecimal.valueOf(12 * 100), 10, RoundingMode.HALF_UP);

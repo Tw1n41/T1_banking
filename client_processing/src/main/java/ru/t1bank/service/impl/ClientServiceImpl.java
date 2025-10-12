@@ -3,8 +3,13 @@ package ru.t1bank.service.impl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
 import ru.t1bank.Client;
+import ru.t1bank.aop.annotation.HttpIncomeRequestLog;
+import ru.t1bank.aop.annotation.HttpOutcomeRequestLog;
 import ru.t1bank.dto.CheckResponce;
 import ru.t1bank.dto.ClientDto;
 import ru.t1bank.dto.RegistryResponce;
@@ -26,12 +31,16 @@ public class ClientServiceImpl implements ClientService {
     private final KafkaClientProducer kafkaClientProducer;
     private final CheckWebClient checkWebClient;
     private final BlacklistRegistryRepository blacklistRegistry;
+    private final RestTemplate restTemplate;
 
+    @HttpIncomeRequestLog
+    @Transactional
     @Override
     public List<Client> registerClients(List<Client> clients) {
         List<Client> savedClients = new ArrayList<>();
         for (Client client : clients) {
-            Optional<CheckResponce> check = checkWebClient.check(Integer.valueOf(client.getClientId()));
+            Optional<CheckResponce> check = check(Long.valueOf(client.getClientId()));
+//            Optional<CheckResponce> check = checkWebClient.check(Integer.valueOf(client.getClientId()));
             check.ifPresent(checkResponse -> {
                 if (!checkResponse.getBlocked()) {
                     Client saved = repository.save(client);
@@ -48,6 +57,8 @@ public class ClientServiceImpl implements ClientService {
                 .toList();
     }
 
+    @HttpIncomeRequestLog
+    @Transactional
     @Override
     public RegistryResponce registerClient(Client client) {
 
@@ -58,7 +69,7 @@ public class ClientServiceImpl implements ClientService {
 
         Client saved = null;
 
-        Optional<CheckResponce> check = checkWebClient.check(Integer.valueOf(client.getClientId()));
+        Optional<CheckResponce> check = check(Long.valueOf(client.getClientId()));
         if (check.isPresent()) {
             if (!check.get().getBlocked()) {
                 saved = repository.save(client);
@@ -97,6 +108,22 @@ public class ClientServiceImpl implements ClientService {
         }
         log.info("Found {} clients", clients.length);
         return Arrays.asList(clients);
+    }
+
+    @HttpOutcomeRequestLog
+    @Override
+    public Optional<CheckResponce> check(Long clientId) {
+        String uri = "http://account_processing:8080/Dockerfile/" + clientId;
+        log.info("Отправка HTTP-запроса к {}", uri);
+
+        try {
+            ResponseEntity<CheckResponce> response =
+                    restTemplate.getForEntity(uri, CheckResponce.class);
+            return Optional.ofNullable(response.getBody());
+        } catch (Exception e) {
+            log.error("Ошибка при обращении к {}: {}", uri, e.getMessage());
+            return Optional.empty();
+        }
     }
 
 //    void clearMiddleName(List<ClientDto> dtos);

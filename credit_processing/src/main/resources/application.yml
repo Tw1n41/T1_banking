@@ -28,3 +28,15 @@ spring:
   client:
     processing:
       url: http://localhost:9099
+
+ru:
+  t1bank:
+    kafka:
+      topic:
+      service_logs: service_logs
+
+metric:
+  time-limit-ms: 2000
+
+cache:
+  ttl-seconds: 60

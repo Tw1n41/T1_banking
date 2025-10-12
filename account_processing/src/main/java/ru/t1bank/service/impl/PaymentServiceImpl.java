@@ -4,8 +4,12 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 import ru.t1bank.Account;
 import ru.t1bank.Payment;
+import ru.t1bank.aop.annotation.Cached;
+import ru.t1bank.aop.annotation.HttpOutcomeRequestLog;
+import ru.t1bank.aop.annotation.Metric;
 import ru.t1bank.dto.PaymentDto;
 import ru.t1bank.enums.PaymentStatus;
 import ru.t1bank.mapper.PaymentMapper;
@@ -25,9 +29,12 @@ public class PaymentServiceImpl implements PaymentService {
     private final PaymentRepository paymentRepository;
     private final AccountRepository accountRepository;
     private final PaymentMapper paymentMapper;
+    private final RestTemplate restTemplate = new RestTemplate();
 
     @Override
     @Transactional
+    @HttpOutcomeRequestLog
+    @Metric
     public PaymentDto payment(String messageKey, PaymentDto dto) {
 
         log.info("Оплата с {}", dto);
@@ -65,10 +72,18 @@ public class PaymentServiceImpl implements PaymentService {
 
         payment.setMessageKey(messageKey);
         Payment saved = paymentRepository.save(payment);
+        String url = "http://credit_processing:8082/Dockerfile";
+        try {
+            restTemplate.postForEntity(url, saved, Void.class);
+            log.info("Отправлено уведомление о платеже {}", saved.getId());
+        } catch (Exception e) {
+            log.error("Ошибка при отправке HTTP-запроса {}", e.getMessage());
+        }
         return paymentMapper.toDto(saved);
     }
 
     @Override
+    @Cached
     public Optional<PaymentDto> getPaymentById(Long id) {
         return paymentRepository.findById(id).map(paymentMapper::toDto);
     }

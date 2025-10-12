@@ -36,6 +36,7 @@ ru:
       topic:
         client_transactions: client_transactions
         client_payments: client_payments
+        service_logs: service_logs
 
 fraud:
   transaction:
@@ -43,3 +44,9 @@ fraud:
       count: 10
       period:
         minutes: 1
+
+metric:
+  time-limit-ms: 2000
+
+cache:
+  ttl-seconds: 60
