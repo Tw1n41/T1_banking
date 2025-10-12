@@ -1,0 +1,42 @@
+databaseChangeLog:
+  - changeSet:
+      id: 005
+      author: postgres
+      changes:
+        - createTable:
+            tableName: error_log
+            columns:
+              - column:
+                  name: id
+                  type: BIGSERIAL
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: timestamp
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: service_name
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: method_signature
+                  type: VARCHAR(1024)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: exception_message
+                  type: VARCHAR(2000)
+              - column:
+                  name: stack_trace
+                  type: TEXT
+              - column:
+                  name: params
+                  type: TEXT
+              - column:
+                  name: log_level
+                  type: VARCHAR(20)
+                  constraints:
+                    nullable: false

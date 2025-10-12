@@ -32,7 +32,7 @@ public class Product {
     @Column(name = "product_id")
     private String productId;
 
-    @PrePersist
+    @PostPersist
     public void generatePID() {
         if (productId == null && id != null) {
             this.productId = productKey + id.toString();

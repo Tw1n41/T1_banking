@@ -17,3 +17,36 @@ spring:
   liquibase:
     change-log: classpath:db/changelog/db.changelog-master.yml
     enabled: true
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: account-processing
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      auto-offset-reset: latest
+      properties:
+        spring.json.trusted.packages: "*"
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+
+ru:
+  t1bank:
+    kafka:
+      topic:
+        client_transactions: client_transactions
+        client_payments: client_payments
+        service_logs: service_logs
+
+fraud:
+  transaction:
+    limit:
+      count: 10
+      period:
+        minutes: 1
+
+metric:
+  time-limit-ms: 2000
+
+cache:
+  ttl-seconds: 60

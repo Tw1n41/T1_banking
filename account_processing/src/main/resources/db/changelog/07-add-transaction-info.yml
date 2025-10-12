@@ -1,0 +1,40 @@
+databaseChangeLog:
+  - changeSet:
+      id: 007
+      author: postgres
+      changes:
+        - addColumn:
+            tableName: transactions
+            columns:
+              - column:
+                  name: message_key
+                  type: VARCHAR(150)
+                  remarks: "Ключ для kafka"
+        - addColumn:
+            tableName: transactions
+            columns:
+              - column:
+                  name: type
+                  type: VARCHAR(150)
+                  remarks: "Тип транзакции"
+        - addColumn:
+            tableName: transactions
+            columns:
+              - column:
+                  name: transaction_id
+                  type: BIGSERIAL
+                  remarks: "ID транзакции"
+        - addColumn:
+            tableName: transactions
+            columns:
+              - column:
+                  name: frozen
+                  type: BOOLEAN
+                  remarks: "Замороженный счет"
+        - addColumn:
+            tableName: payments
+            columns:
+              - column:
+                  name: expired
+                  type: BOOLEAN
+                  remarks: "Отмененный платеж"

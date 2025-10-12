@@ -37,6 +37,9 @@ public class Account {
     @Column(name = "card_exist")
     private Boolean cardExist;
 
+    @Column(name = "blocked")
+    private boolean blocked;
+
     @Enumerated(EnumType.STRING)
     private AccountStatus accountStatus;
 }

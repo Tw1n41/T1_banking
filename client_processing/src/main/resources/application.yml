@@ -16,3 +16,33 @@ spring:
     show-sql: true
   liquibase:
     change-log: classpath:db/changelog/db.changelog-master.yml
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: client-processing
+      max.poll.records: 10
+      session-timeout: 10000
+      heartbeat.interval: 3000
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+          spring.json.trusted.packages: "*"
+    producer:
+      enable: true
+    topic:
+      client_registration: user-created-topic
+      client_products: client_products
+      client_credit_products: client_credit_products
+      client_cards: client_cards
+
+ru:
+  t1bank:
+    kafka:
+      topic:
+        service_logs: service_logs
+
+metric:
+  time-limit-ms: 2000
+
+cache:
+  ttl-seconds: 60
