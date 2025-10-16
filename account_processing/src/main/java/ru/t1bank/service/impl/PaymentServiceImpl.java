@@ -3,6 +3,7 @@ package ru.t1bank.service.impl;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import ru.t1bank.Account;
@@ -35,6 +36,7 @@ public class PaymentServiceImpl implements PaymentService {
     @Transactional
     @HttpOutcomeRequestLog
     @Metric
+    @PreAuthorize("hasAuthority('MASTER', 'GRAND_EMPLOYEE')")
     public PaymentDto payment(String messageKey, PaymentDto dto) {
 
         log.info("Оплата с {}", dto);

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
@@ -18,6 +19,7 @@ import ru.t1bank.kafka.KafkaClientProducer;
 import ru.t1bank.repository.BlacklistRegistryRepository;
 import ru.t1bank.repository.ClientRepository;
 import ru.t1bank.service.metrics.ClientService;
+import ru.t1bank.util.JwtTokenUtil;
 import ru.t1bank.web.CheckWebClient;
 
 import java.util.*;
@@ -32,10 +34,12 @@ public class ClientServiceImpl implements ClientService {
     private final CheckWebClient checkWebClient;
     private final BlacklistRegistryRepository blacklistRegistry;
     private final RestTemplate restTemplate;
+    private final JwtTokenUtil jwtTokenUtil;
 
     @HttpIncomeRequestLog
     @Transactional
     @Override
+    @PreAuthorize("hasAuthority('MASTER')")
     public List<Client> registerClients(List<Client> clients) {
         List<Client> savedClients = new ArrayList<>();
         for (Client client : clients) {
@@ -60,6 +64,7 @@ public class ClientServiceImpl implements ClientService {
     @HttpIncomeRequestLog
     @Transactional
     @Override
+    @PreAuthorize("hasAuthority('MASTER')")
     public RegistryResponce registerClient(Client client) {
 
         boolean isBlacklisted = blacklistRegistry.existsByDocumentId(client.getDocumentId());
@@ -82,10 +87,12 @@ public class ClientServiceImpl implements ClientService {
             }
             else throw new ClientException("Client has been banned");
         }
-//        client.setId(222L);
-//        return client;
+
+        String token = jwtTokenUtil.generateToken(client.getFirstName(), "CURRENT_CLIENT");
+        log.info("Выдан токен для клиента {} с ролью CURRENT_CLIENT", client.getId());
         return RegistryResponce.builder()
                 .clientId(saved.getId())
+                .token(token)
                 .build();
     }
 
@@ -112,6 +119,7 @@ public class ClientServiceImpl implements ClientService {
 
     @HttpOutcomeRequestLog
     @Override
+    @PreAuthorize("hasAuthority('MASTER')")
     public Optional<CheckResponce> check(Long clientId) {
         String uri = "http://account_processing:8080/Dockerfile/" + clientId;
         log.info("Отправка HTTP-запроса к {}", uri);

@@ -1,7 +1,9 @@
 package ru.t1bank.service.impl;
 
+import com.opencsv.bean.processor.PreAssignmentProcessor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import ru.t1bank.Product;
 import ru.t1bank.aop.annotation.Cached;
@@ -20,6 +22,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     @Metric
+    @PreAuthorize("hasAuthority('MASTER')")
     public Product createProduct(Product product) {
         log.info("Сохранен продукт {}", product);
         return productRepository.save(product);

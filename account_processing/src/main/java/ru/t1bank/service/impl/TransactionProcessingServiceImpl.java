@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cglib.core.Local;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.aspectj.AnnotationTransactionAspect;
 import org.springframework.transaction.interceptor.BeanFactoryTransactionAttributeSourceAdvisor;
@@ -57,6 +58,7 @@ public class TransactionProcessingServiceImpl implements TransactionProcessingSe
     @Override
     @Transactional
     @Metric
+    @PreAuthorize("hasAuthority('MASTER')")
     public void process(String messageKey, TransactionDto dto) {
 
         log.info("Process with key {} dto {} started", messageKey, dto);
@@ -118,6 +120,7 @@ public class TransactionProcessingServiceImpl implements TransactionProcessingSe
 
     @HttpOutcomeRequestLog
     @Cached
+    @PreAuthorize("hasAuthority('MASTER', 'GRAND_EMPLOYEE')")
     public boolean checkIfClientBlocked(Long clientId) {
         String url = String.format("%s/%s/is-blocked", clientServiceUrl, clientId);
         log.info("Checking client status by URL {}", url);

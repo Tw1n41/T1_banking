@@ -19,4 +19,6 @@ public class RegistryResponce {
 
     private String email;
 
+    private String token;
+
 }

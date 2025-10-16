@@ -50,3 +50,8 @@ metric:
 
 cache:
   ttl-seconds: 60
+
+security:
+  jwt:
+    secret: key
+    expiration: 3600000

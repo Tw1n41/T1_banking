@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.client.reactive.ClientHttpConnector;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import ru.t1bank.Client;
 import ru.t1bank.ClientProduct;
@@ -43,6 +44,7 @@ public class ClientProductServiceImpl implements ClientProductService {
 
     @Override
     @Metric
+    @PreAuthorize("hasAuthority('MASTER')")
     public ClientProductDto create(ClientProductDto clientPrDto) {
 
         Client client = clientRepository.findById(clientPrDto.getClientId())
@@ -70,6 +72,7 @@ public class ClientProductServiceImpl implements ClientProductService {
 
     @Override
     @Cached
+    @PreAuthorize("hasAuthority('MASTER')")
     public Optional<ClientProductDto> getById(Long id) {
         return clientProductRepository.findById(id)
                 .map(clientProductMapper::toDto);
@@ -77,6 +80,7 @@ public class ClientProductServiceImpl implements ClientProductService {
 
     @Override
     @Cached
+    @PreAuthorize("hasAuthority('MASTER')")
     public List<ClientProductDto> getAllServices() {
         return clientProductRepository.findAll().stream()
                 .map(clientProductMapper::toDto)
@@ -85,6 +89,7 @@ public class ClientProductServiceImpl implements ClientProductService {
 
     @Override
     @Metric
+    @PreAuthorize("hasAuthority('CURRENT_CLIENT')")
     public ClientProductDto updService(Long id, ClientProductDto clientPrDto) {
 
         ClientProduct clientProduct = clientProductRepository.findById(id)
@@ -112,6 +117,7 @@ public class ClientProductServiceImpl implements ClientProductService {
 
     @Override
     @Metric
+    @PreAuthorize("hasAuthority('MASTER')")
     public void delService(Long id) {
         clientProductRepository.findById(id).ifPresentOrElse(clientProduct -> {
             clientProductRepository.delete(clientProduct);

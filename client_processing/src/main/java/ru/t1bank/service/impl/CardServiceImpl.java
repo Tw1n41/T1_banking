@@ -2,6 +2,7 @@ package ru.t1bank.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import ru.t1bank.Card;
 import ru.t1bank.aop.annotation.Metric;
@@ -25,6 +26,7 @@ public class CardServiceImpl implements CardService {
 
     @Override
     @Metric
+    @PreAuthorize("hasAuthority('MASTER')")
     public void create(CardDto cardDto) {
 
         if (cardDto.getClientId() == null) {

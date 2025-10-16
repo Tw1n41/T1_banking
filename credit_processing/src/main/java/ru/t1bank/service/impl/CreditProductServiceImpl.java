@@ -1,8 +1,10 @@
 package ru.t1bank.service.impl;
 
+import jakarta.persistence.PrePersist;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import ru.t1bank.ProductRegistry;
@@ -35,6 +37,7 @@ public class CreditProductServiceImpl implements CreditProductService {
     @Override
     @HttpOutcomeRequestLog
     @Metric
+    @PreAuthorize("hasAuthority('MASTER')")
     public void processCreditProduct(CreditProductRequestDto dto) {
         log.info("Обработка кредитного продукта {}", dto);
 
