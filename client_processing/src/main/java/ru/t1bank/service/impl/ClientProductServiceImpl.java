@@ -22,6 +22,7 @@ import ru.t1bank.util.ClientProductMapper;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -126,5 +127,19 @@ public class ClientProductServiceImpl implements ClientProductService {
         }, () -> {
             throw new RuntimeException("ClientProduct " + id + " не найден");
         });
+    }
+
+    @Override
+    public List<ClientProductDto> findByClientId(Long clientId) {
+        return clientProductRepository.findByClientId(clientId)
+                .stream()
+                .map(this::toDto)
+                .collect(Collectors.toList());
+    }
+
+    private ClientProductDto toDto(ClientProduct product) {
+        ClientProductDto dto = new ClientProductDto();
+        dto.setId(product.getId());
+        return dto;
     }
 }

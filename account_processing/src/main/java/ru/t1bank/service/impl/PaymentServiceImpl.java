@@ -1,5 +1,6 @@
 package ru.t1bank.service.impl;
 
+import io.micrometer.core.instrument.MeterRegistry;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,6 +32,7 @@ public class PaymentServiceImpl implements PaymentService {
     private final AccountRepository accountRepository;
     private final PaymentMapper paymentMapper;
     private final RestTemplate restTemplate = new RestTemplate();
+    private final MeterRegistry meterRegistry;
 
     @Override
     @Transactional
@@ -81,6 +83,7 @@ public class PaymentServiceImpl implements PaymentService {
         } catch (Exception e) {
             log.error("Ошибка при отправке HTTP-запроса {}", e.getMessage());
         }
+        meterRegistry.counter("credit_products_created_total").increment();
         return paymentMapper.toDto(saved);
     }
 

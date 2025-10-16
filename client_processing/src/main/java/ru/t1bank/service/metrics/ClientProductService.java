@@ -17,4 +17,6 @@ public interface ClientProductService {
     ClientProductDto updService(Long id, ClientProductDto dto);
 
     void delService(Long id);
+
+    List<ClientProductDto> findByClientId(Long clientId);
 }

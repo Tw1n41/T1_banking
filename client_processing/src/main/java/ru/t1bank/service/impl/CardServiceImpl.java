@@ -13,6 +13,7 @@ import ru.t1bank.service.metrics.CardService;
 import ru.t1bank.util.CardMapper;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 import java.util.Random;
 
 @Service
@@ -45,5 +46,14 @@ public class CardServiceImpl implements CardService {
         }
 
     }
-
+    private CardDto toDto(Card card) {
+        CardDto dto = new CardDto();
+        dto.setId(card.getId());
+        return dto;
+    }
+    @Override
+    public Optional<CardDto> getCardById(Long id) {
+        return cardRepository.findById(id)
+                .map(this::toDto);
+    }
 }

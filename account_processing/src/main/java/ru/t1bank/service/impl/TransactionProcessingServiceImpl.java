@@ -1,5 +1,6 @@
 package ru.t1bank.service.impl;
 
+import io.micrometer.core.instrument.MeterRegistry;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -45,6 +46,8 @@ public class TransactionProcessingServiceImpl implements TransactionProcessingSe
     private final AnnotationTransactionAspect transactionAspect;
 
     private final TransactionService transactionService;
+
+    private final MeterRegistry meterRegistry;
 
     @Value("${client.service.url:http://client-processing/api/v1/client}")
     private String clientServiceUrl;
@@ -116,6 +119,7 @@ public class TransactionProcessingServiceImpl implements TransactionProcessingSe
             applyCredit(account, dto, transaction);
         }
         else log.warn("Unknown transaction type {}", dto.getType());
+        meterRegistry.counter("credit_products_created_total").increment();
     }
 
     @HttpOutcomeRequestLog
