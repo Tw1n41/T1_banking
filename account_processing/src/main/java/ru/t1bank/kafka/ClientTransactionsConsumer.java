@@ -3,6 +3,8 @@ package ru.t1bank.kafka;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.kafka.support.KafkaHeaders;
+import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.stereotype.Component;
 import ru.t1bank.Transaction;
 import ru.t1bank.dto.TransactionDto;
@@ -18,7 +20,8 @@ public class ClientTransactionsConsumer {
     private final TransactionMapper transactionMapper;
 
     @KafkaListener(topics = "${t1bank.kafka.topic.client_transactions}", groupId = "account-processing")
-    public void consume(TransactionDto dto) {
+    public void consume(@Header(KafkaHeaders.RECEIVED_KEY) String messageKey,
+                        TransactionDto dto) {
         log.info("Получено сообщение {}", dto);
 
         try {

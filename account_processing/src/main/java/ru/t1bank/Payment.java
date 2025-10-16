@@ -6,6 +6,7 @@ import lombok.*;
 import ru.t1bank.enums.PaymentStatus;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -14,7 +15,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Table(name = "payment")
+@Table(name = "payments")
 public class Payment {
 
     @Id
@@ -25,7 +26,7 @@ public class Payment {
     private Long accountId;
 
     @Column(name = "payment_date")
-    private LocalDateTime paymentDate;
+    private LocalDate paymentDate;
 
     @Column(name = "amount")
     private BigDecimal amount;
@@ -38,4 +39,10 @@ public class Payment {
 
     @Enumerated(EnumType.STRING)
     private PaymentStatus paymentStatus;
+
+    @Column(name = "expired")
+    private boolean expired;
+
+    @Column(name = "message_key")
+    private String messageKey;
 }
